@@ -4,20 +4,25 @@ import { useSearchStore } from '../store/searchStore'
 import { getPosts } from '@/lib/getPosts'
 
 const SearchField = () => {
-  const [input, setInput] = useState('')
-  const { setSearchTerm, setFilteredPosts } = useSearchStore.getState()
+  const { searchTerm, setSearchTerm, setFilteredPosts } = useSearchStore(
+    (state) => ({
+      searchTerm: state.searchTerm,
+      setSearchTerm: state.setSearchTerm,
+      setFilteredPosts: state.setFilteredPosts,
+    })
+  )
 
   const handleSearch = async () => {
     const postsArr = await getPosts()
-    setFilteredPosts(input, postsArr)
-    setInput('')
+    setFilteredPosts(searchTerm, postsArr)
+    setSearchTerm('')
     setSearchTerm('')
   }
   useEffect(() => {
-    if (input !== '') {
-      setSearchTerm(input)
+    if (searchTerm !== '') {
+      setSearchTerm(searchTerm)
     }
-  }, [input])
+  }, [searchTerm])
 
   console.log(useSearchStore.getState())
 
@@ -27,8 +32,8 @@ const SearchField = () => {
         <input
           type='search'
           placeholder='Search'
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
         <button onClick={handleSearch}>
           <svg
