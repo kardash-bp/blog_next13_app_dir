@@ -1,23 +1,35 @@
+'use client'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import PostsList from './components/PostsList'
+import { useSearchStore } from './store/searchStore'
+import { useCallback, useEffect } from 'react'
+import { getPosts } from '@/lib/getPosts'
 
-const getPosts = async () => {
-  try {
-    const res = await fetch('http://localhost:3000/api/posts')
-    const data = await res.json()
-    return data.slice(0, 5)
-  } catch (err: any) {}
-}
-
-export default async function Home() {
-  const posts = await getPosts()
-
+export default function Home() {
+  const { setFilteredPosts } = useSearchStore.getState()
+  let postsState = useSearchStore((store) => store.filteredPosts)
+  const initPosts = async () => {
+    const postsArr = await getPosts()
+    setFilteredPosts('', postsArr)
+  }
+  const handleState = useCallback(async () => {
+    if (!postsState.length) {
+      postsState = await getPosts()
+    }
+  }, [postsState])
+  useEffect(() => {
+    initPosts()
+  }, [])
+  useEffect(() => {
+    handleState()
+  }, [postsState])
+  console.log({ postsState })
   return (
     <>
       <Header />
       <div className='max-w-screen-xl container mx-auto flex flex-wrap py-6'>
-        <PostsList posts={posts} />
+        <PostsList posts={postsState} />
         <Sidebar />
       </div>
     </>

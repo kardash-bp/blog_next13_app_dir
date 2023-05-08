@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import React from 'react'
 import SocialGroup from './SocialGroup'
+import SearchField from './SearchField'
 
 const TopNav = () => {
   return (
-    <nav className='w-full  py-4 bg-darker shadow'>
+    <nav className='w-full  py-2 bg-darker shadow'>
       <div className='max-w-screen-xl container mx-auto flex flex-wrap items-center justify-between'>
         <nav>
           <ul className='flex items-center justify-between font-bold text-sm text-dirty  uppercase no-underline'>
@@ -24,7 +25,7 @@ const TopNav = () => {
           </ul>
         </nav>
 
-        <SocialGroup />
+        <SearchField />
       </div>
     </nav>
   )
